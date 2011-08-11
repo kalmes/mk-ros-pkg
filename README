@@ -1,0 +1,6 @@
+This is a repository for ROS packages by Mark Kalmes. 
+
+Packages:
+SSC32py - a port of Robotis that supports the SSC32 controller
+
+Everything in this repository is BSD licensed.
