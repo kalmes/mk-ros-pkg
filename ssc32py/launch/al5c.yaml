@@ -1,0 +1,50 @@
+# PLEASE NOTE - USE OF THIS FILE MAY CAUSE DAMAGE TO YOUR SERVOS AND/OR ARM.
+# THIS FILE IS CONFIGURED FOR MY LYNXMOTION ARM. IT IS SPECIFIC TO HOW I 
+# ATTACHED THE SERVOS AND MY WIRE LENGTHS. PLEASE DO NOT USE WITHOUT 
+# VERIFYING THE LIMITS ARE VALID FOR YOUR ASSEMBLY OF THE ARM. 
+#
+# sample servo config file for a Lynxmotion AL5C arm with wrist rotate and gripper
+#   - servos are attached to headers 0-4 in order from base to gripper
+#     then (optional) wrist rotate on header 5
+#
+# hmm - I would like to specify degrees here, but at least for diamondback,
+#   .yaml files referenced through a launch <rosparam> file don't actually
+#   go through rosparam processing. It looks like this will be fixed in
+#   electric
+
+base:
+    id: 0
+    init_ang: 0.0
+    min_ang: -0.96 # -55
+    max_ang: 0.96 # 55
+    
+shoulder:
+    id: 1
+    init_ang: 0.6981 # 40
+    min_ang: -0.8727 # -50
+    max_ang: 0.8727 # 50
+    
+elbow:
+    id: 2
+    init_ang: 1.2217 # 70
+    min_ang: -0.8727 # -50
+    max_ang: 1.5708 # 90
+    
+wrist:
+    id: 3
+    init_ang: 0.0
+    min_ang: -1.3963 # -80
+    max_ang: 1.5708 # 90
+    
+grip:
+    id: 4
+    init_ang: -0.5236 # -30
+    min_ang: -1.5708 # -90
+    max_ang: 0.7854 # 45
+
+wrist_rotate:
+    id: 5
+    init_ang: 0.0
+    min_ang: -1.3963 # -80
+    max_ang: 1.3963 # 80
+    

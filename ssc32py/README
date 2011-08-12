@@ -1,0 +1,33 @@
+This package is designed to interact with the SSC-32 controller from Lynxmotion.
+It has only been tested with V1 of the ATMega controller chip.
+
+Special thanks to the kind folks at Healthcare Robotics Lab for creating the
+excellent Robotis package. This package copies most of the code and organization
+from the Robotis example. Therefore portions of the code are still copyrighted
+by HRL, and all code is released under the same BSD license.
+
+The SSC-32 controller can be purchased from Lynxmotion:
+http://www.lynxmotion.com/p-395-ssc-32-servo-controller.aspx
+
+The instructions are here:
+http://www.lynxmotion.com/images/html/build136.htm
+
+
+--------------------------------------------------
+How to run the code:
+
+You can run the default server with parameters for an AL5C arm using the 
+sample .launch file:
+
+roslaunch ssc32py sample_server.launch dev_name:=/dev/ttyUSB1
+
+Take a look at launch/al5c.yaml to see how to configure each named servo.
+
+There is a sample client that moves between a few positions in 
+launch/sample_client.py. This sample just connects to named servos and
+moves them to desired angles.
+
+
+
+
+

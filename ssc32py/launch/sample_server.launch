@@ -1,0 +1,13 @@
+<launch>
+  <arg name="dev_name" default="/dev/ttyUSB0" />
+  <arg name="dev_baud" default="115200" />
+  
+  <node pkg="ssc32py" name="ssc32_server" type="ros_ssc32.py">
+    <param name="ssc32/dev_name" value="$(arg dev_name)" />
+    <param name="ssc32/dev_baud" value="$(arg dev_baud)" />
+    
+    <!-- this is a sample configuration for lynxmotion AL5C arm - 
+        NOTE: verify limits before using with your own kit -->
+    <rosparam file="$(find ssc32py)/launch/al5c.yaml"/>
+  </node>
+</launch>
