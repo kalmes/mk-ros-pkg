@@ -46,6 +46,8 @@ import thread
 import sys, optparse
 import math
 
+#debug = open('/home/mark/debug.txt', 'w')
+
 class SSC32_Controller():
     """ Manages overall communication with the SSC32
     """
@@ -57,6 +59,7 @@ class SSC32_Controller():
 
         self.mutex = thread.allocate_lock()
         self.servo_dev = None
+        self.move_queue = None
 
         self.acq_mutex()
         self._open_serial( baudrate )
@@ -68,9 +71,24 @@ class SSC32_Controller():
     def rel_mutex(self):
         self.mutex.release()
 
-    def send_serial(self, msg):
+    def add_move_queue(self, msg):
+        """Add string to the movement queue. Will be added to next movement send_serial() commmand"""
+
+        if self.move_queue:
+            self.move_queue += msg
+        else:
+            self.move_queue = msg
+
+    def send_serial(self, msg, move_command=False):
+        """send the serial msg. if move_command is set, adds any existing move_queue to the message"""
+
         # It is up to the caller to acquire / release mutex
+        if move_command and self.move_queue:
+            #print >> debug, 'Q:', self.move_queue; debug.flush()
+            self.servo_dev.write(self.move_queue)
+            self.move_queue = None
         self.servo_dev.write( msg )
+        #print >> debug, 'W:', msg; debug.flush()
 
     def read_serial(self, nBytes=1):
         # It is up to the caller to acquire / release mutex
@@ -293,13 +311,12 @@ class SSC32_Servo():
             movestr += " S" + str(speed)
         if endtime:
             movestr += " T" + str(endtime)
-        if endgroup:
-            movestr += "\r"
-        else:
-            movestr += " "
             
         self.ssc32.acq_mutex()
-        self.ssc32.send_serial(movestr)
+        if endgroup:
+            self.ssc32.send_serial(movestr + '\r', move_command=True)
+        else:
+            self.ssc32.add_move_queue(movestr + ' ')
         self.ssc32.rel_mutex()
         
     def read_angle(self):

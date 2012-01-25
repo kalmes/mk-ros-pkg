@@ -35,7 +35,7 @@ import roslib
 roslib.load_manifest('ssc32py')
 import rospy
 
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, Float32
 from ssc32py.srv import None_Float
 from ssc32py.srv import None_FloatResponse
 from ssc32py.srv import MoveAng
@@ -57,7 +57,7 @@ class ROS_SSC32_Server():
         self.name = name
         
         rospy.logout( 'ROS_SSC32_Server: Starting servo/' + self.name )
-        self.channel = rospy.Publisher('servo/' + self.name, Float64)
+        self.channel = rospy.Publisher('servo/' + self.name, Float32)
 
         self.__service_ang = rospy.Service('servo/' + name + '/readangle',
                                            None_Float, self.__cb_readangle)
@@ -78,15 +78,13 @@ class ROS_SSC32_Server():
         status = self.servo.ssc32.is_moving()
         return None_Int32Response( int(status) )
 
-    def __cb_moveangle( self, request ):
-        ang = request.angle
-        angvel = request.angvel
-        self.servo.move_angle(ang, angvel)
+    def __cb_moveangle( self, r ):
+        self.servo.move_angle(r.angle, r.angvel, r.timesecs, r.endgroup)
         return MoveAngResponse()
 
     def update_server(self):
         ang = self.servo.read_angle()
-        self.channel.publish( Float64(ang) )
+        self.channel.publish( Float32(ang) )
         return ang
 
 
@@ -185,8 +183,9 @@ class ROS_SSC32_Client():
         resp = self.__service_ismoving()
         return bool( resp.value )
         
-    def move_angle( self, ang, angvel = math.radians(50)):
-        self.__service_moveang( ang, angvel, )
+    def move_angle(self, angle, angvel = math.radians(50), 
+                   timesecs=0, endgroup=True):
+        self.__service_moveang(angle, angvel, timesecs, endgroup)
 
 if __name__ == '__main__':
     

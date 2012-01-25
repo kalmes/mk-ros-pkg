@@ -1,3 +1,5 @@
 float64 angle
 float64 angvel
+float32 timesecs
+int8 endgroup
 ---
